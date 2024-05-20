@@ -1,0 +1,30 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100vh;
+    width: 30%;
+    position: fixed;
+    left: 0;
+    padding: 1em;
+    box-sizing: border-box;
+    border-right: 1px solid #4f3d3d;
+}
+
+.chat-input {
+    margin-top: 1em;
+}
+
+.chat-messages {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.sent-message {
+    color: #78789b;
+    text-align: right;
+}
+
+.received-message {
+    color: #617361;
+}

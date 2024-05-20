@@ -1,6 +1,7 @@
 package smart.document.assistant.app.controller;
 
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,7 @@ import smart.document.assistant.app.client.ChatMessageBody;
 import smart.document.assistant.app.springai.SpringAiAssistant;
 
 @RestController
+@CrossOrigin
 public class AssistantController {
 
     private final SpringAiAssistant springAiAssistant;
