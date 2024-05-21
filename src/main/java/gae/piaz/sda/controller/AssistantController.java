@@ -1,9 +1,9 @@
 package gae.piaz.sda.controller;
 
-import gae.piaz.sda.controller.dto.ChatMessageBody;
+import gae.piaz.sda.controller.dto.ChatMessage;
 import gae.piaz.sda.springai.SpringAiAssistant;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 
 @RestController
 @CrossOrigin
@@ -16,10 +16,13 @@ public class AssistantController {
         this.springAiAssistant = springAiAssistant;
     }
 
-    // curl -X POST -H "Content-Type: application/json" -d '{"chatId":"1", "message":"Hello"}'
-    // http://localhost:8080/chat
     @PostMapping("chat")
-    public Flux<String> chat(@RequestBody ChatMessageBody chatMessageBody) {
-        return springAiAssistant.chat(chatMessageBody.getChatId(), chatMessageBody.getMessage());
+    public ResponseEntity<ChatMessage> chat(@RequestBody ChatMessage chatMessage) {
+        String msg = springAiAssistant.chat(chatMessage.getChatId(), chatMessage.getMessage());
+        ChatMessage response = new ChatMessage();
+        response.setMessage(msg);
+        response.setChatId(chatMessage.getChatId());
+        response.setIsResponse(true);
+        return ResponseEntity.ok(response);
     }
 }

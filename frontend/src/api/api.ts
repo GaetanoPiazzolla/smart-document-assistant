@@ -26,21 +26,27 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface ChatMessageBody
+ * @interface ChatMessage
  */
-export interface ChatMessageBody {
+export interface ChatMessage {
     /**
      * 
      * @type {string}
-     * @memberof ChatMessageBody
+     * @memberof ChatMessage
      */
     'message'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ChatMessageBody
+     * @memberof ChatMessage
      */
     'chatId'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ChatMessage
+     */
+    'isResponse'?: boolean;
 }
 /**
  * 
@@ -107,13 +113,13 @@ export const AssistantControllerApiAxiosParamCreator = function (configuration?:
     return {
         /**
          * 
-         * @param {ChatMessageBody} chatMessageBody 
+         * @param {ChatMessage} chatMessage 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        chat: async (chatMessageBody: ChatMessageBody, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'chatMessageBody' is not null or undefined
-            assertParamExists('chat', 'chatMessageBody', chatMessageBody)
+        chat: async (chatMessage: ChatMessage, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'chatMessage' is not null or undefined
+            assertParamExists('chat', 'chatMessage', chatMessage)
             const localVarPath = `/api/v1/assistant/chat`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -133,7 +139,7 @@ export const AssistantControllerApiAxiosParamCreator = function (configuration?:
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(chatMessageBody, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(chatMessage, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -152,12 +158,12 @@ export const AssistantControllerApiFp = function(configuration?: Configuration) 
     return {
         /**
          * 
-         * @param {ChatMessageBody} chatMessageBody 
+         * @param {ChatMessage} chatMessage 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async chat(chatMessageBody: ChatMessageBody, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.chat(chatMessageBody, options);
+        async chat(chatMessage: ChatMessage, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatMessage>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.chat(chatMessage, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AssistantControllerApi.chat']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -174,12 +180,12 @@ export const AssistantControllerApiFactory = function (configuration?: Configura
     return {
         /**
          * 
-         * @param {ChatMessageBody} chatMessageBody 
+         * @param {ChatMessage} chatMessage 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        chat(chatMessageBody: ChatMessageBody, options?: any): AxiosPromise<Array<string>> {
-            return localVarFp.chat(chatMessageBody, options).then((request) => request(axios, basePath));
+        chat(chatMessage: ChatMessage, options?: any): AxiosPromise<ChatMessage> {
+            return localVarFp.chat(chatMessage, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -193,13 +199,13 @@ export const AssistantControllerApiFactory = function (configuration?: Configura
 export class AssistantControllerApi extends BaseAPI {
     /**
      * 
-     * @param {ChatMessageBody} chatMessageBody 
+     * @param {ChatMessage} chatMessage 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AssistantControllerApi
      */
-    public chat(chatMessageBody: ChatMessageBody, options?: RawAxiosRequestConfig) {
-        return AssistantControllerApiFp(this.configuration).chat(chatMessageBody, options).then((request) => request(this.axios, this.basePath));
+    public chat(chatMessage: ChatMessage, options?: RawAxiosRequestConfig) {
+        return AssistantControllerApiFp(this.configuration).chat(chatMessage, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

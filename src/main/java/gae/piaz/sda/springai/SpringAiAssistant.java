@@ -17,6 +17,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 
 /** * @author Christian Tzolov */
@@ -43,10 +44,13 @@ public class SpringAiAssistant {
         this.chatHistory = chatHistory;
     }
 
-    public Flux<String> chat(String chatId, String userMessageContent) {
+    public String chat(String chatId, String userMessageContent) {
 
         // Retrieve related documents to query
         List<Document> similarDocuments = this.vectorStore.similaritySearch(userMessageContent);
+
+        if(CollectionUtils.isEmpty(similarDocuments))
+            return "No similar documents found - I'm useless.";
 
         Message systemMessage =
                 getSystemMessage(
@@ -62,6 +66,7 @@ public class SpringAiAssistant {
         // Ask the AI model
         Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
 
+        // FIXME: this could be a non-blocking call returning Flux to the client
         return this.chatClient.stream(prompt)
                 .map(
                         (ChatResponse chatResponse) -> {
@@ -78,7 +83,7 @@ public class SpringAiAssistant {
                             return (assistantMessage.getContent() != null)
                                     ? assistantMessage.getContent()
                                     : "";
-                        });
+                        }).blockFirst();
     }
 
     private boolean isValidResponse(ChatResponse chatResponse) {
