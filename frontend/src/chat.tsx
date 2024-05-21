@@ -35,6 +35,8 @@ function Chat() {
 
     return (
         <div className="chat-container">
+            <h2>Smart Document Assistant</h2>
+            <hr style={{width: '100%'}}/>
             <div className="chat-messages">
                 {messages.map((message, index) => (
                     <p key={index}
