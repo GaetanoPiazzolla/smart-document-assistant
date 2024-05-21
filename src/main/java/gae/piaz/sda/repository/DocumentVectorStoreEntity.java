@@ -4,17 +4,17 @@ import jakarta.persistence.*;
 
 import lombok.Data;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "document_vector_store")
 @Data
 public class DocumentVectorStoreEntity {
 
+    @Id
     @Column(name = "vector_store_id")
-    private UUID vectorStoreId;
+    private String vectorStoreId;
 
+    @Id
     @Column(name = "document_id")
-    private Long documentId;
+    private Integer documentId;
 
 }

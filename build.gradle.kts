@@ -55,7 +55,7 @@ openApiValidate {
 openApiGenerate {
 	generatorName.set("typescript-axios")
 	inputSpec.set("$rootDir/api/api-docs.yaml")
-	outputDir.set("$rootDir/../frontend/src/api")
+	outputDir.set("$rootDir/frontend/src/api")
 }
 
 spotless {
