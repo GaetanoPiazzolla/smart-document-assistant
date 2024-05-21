@@ -1,0 +1,4 @@
+It's possible to add new documents in the right section of the application, where you can add, download and delete documents.
+Every document has to be ingested in the system before you can ask questions about it.
+If you want you can specify some parameters in the injection phase like the defaultChunkSize, the minChunkSize and other advanced parameters
+to help the system to understand the document better.
