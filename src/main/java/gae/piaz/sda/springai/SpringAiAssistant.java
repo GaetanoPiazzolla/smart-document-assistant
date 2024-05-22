@@ -44,13 +44,13 @@ public class SpringAiAssistant {
         this.chatHistory = chatHistory;
     }
 
-    public String chat(String chatId, String userMessageContent) {
+    public Flux<String> chat(String chatId, String userMessageContent) {
 
         // Retrieve related documents to query
         List<Document> similarDocuments = this.vectorStore.similaritySearch(userMessageContent);
 
         if(CollectionUtils.isEmpty(similarDocuments))
-            return "No similar documents found - I'm useless.";
+            return null;
 
         Message systemMessage =
                 getSystemMessage(
@@ -83,7 +83,7 @@ public class SpringAiAssistant {
                             return (assistantMessage.getContent() != null)
                                     ? assistantMessage.getContent()
                                     : "";
-                        }).blockFirst();
+                        });
     }
 
     private boolean isValidResponse(ChatResponse chatResponse) {

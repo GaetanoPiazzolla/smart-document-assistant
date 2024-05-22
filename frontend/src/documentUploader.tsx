@@ -18,6 +18,12 @@ function DocumentUploader() {
         fileInputRef.current?.click();
     };
 
+    const fetchDocuments = async () => {
+        if (documentApi) {
+            const response = await documentApi.getAll();
+            setDocuments(response.data);
+        }
+    };
     const handleUpload = async () => {
         if (selectedFile && documentApi) {
             const uploadFileRequest: UploadFileRequest = {
@@ -29,17 +35,11 @@ function DocumentUploader() {
                 }
             }
             await documentApi.uploadFile(selectedFile.name, uploadFileRequest, options);
+            fetchDocuments();
         }
     };
 
     useEffect(() => {
-        const fetchDocuments = async () => {
-            if (documentApi) {
-                const response = await documentApi.getAll();
-                setDocuments(response.data);
-            }
-        };
-
         fetchDocuments();
     }, [documentApi]);
 
@@ -48,6 +48,7 @@ function DocumentUploader() {
             handleUpload();
         }
     }, [selectedFile]);
+
 
     return (
         <div className="document-uploader-container">

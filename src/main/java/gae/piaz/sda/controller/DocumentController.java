@@ -18,7 +18,8 @@ public class DocumentController {
     private DocumentService documentService;
 
     /**
-     * Receive a  file and store it in the database.
+     * Receive a file and store it in the database.
+     * TODO can be async
      */
     @PostMapping
     public ResponseEntity<DocumentDTO> uploadFile(
