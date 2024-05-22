@@ -24,7 +24,6 @@ function Chat() {
             return;
 
         try {
-
             const message: ChatMessage = {
                 chatId,
                 message: input,

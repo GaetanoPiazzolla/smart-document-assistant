@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Sia Backend API
- * This is the backend for the Sia project.
+ * Smart Document Generation API
+ * This is the backend for the Smart Document Generation Application.
  *
  * The version of the OpenAPI document: 1.0
  * 

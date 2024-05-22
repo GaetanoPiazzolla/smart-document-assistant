@@ -1,6 +1,7 @@
 package gae.piaz.sda.service;
 
 import gae.piaz.sda.controller.dto.DocumentDTO;
+import gae.piaz.sda.controller.dto.DocumentTextDTO;
 import gae.piaz.sda.repository.DocumentEntity;
 import gae.piaz.sda.repository.DocumentRepository;
 import gae.piaz.sda.repository.DocumentVectorStoreEntity;
@@ -9,10 +10,15 @@ import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +35,6 @@ public class DocumentService {
         List<Document> vectorStoreDocuments =
                 new TokenTextSplitter(30, 20, 1, 10000, true)
                         .apply(new TextReader(file.getResource()).get());
-
         vectorStore.accept(vectorStoreDocuments);
 
         DocumentEntity documentEntity = new DocumentEntity();
@@ -55,6 +60,46 @@ public class DocumentService {
                 vectorStoreDocuments.stream().map(Document::getId).collect(Collectors.toList()));
 
         return documentDTO;
+    }
+
+
+    public DocumentDTO uploadText(DocumentTextDTO documentTextDTO) {
+        Resource resource = new ByteArrayResource(documentTextDTO.getContent().getBytes());
+
+        Map<String, Object> customMetadata = new HashMap<>();
+        customMetadata.put("name", documentTextDTO.getName());
+        customMetadata.put("charset", "UTF-8");
+
+        List<Document> vectorStoreDocuments =
+                new TokenTextSplitter(30, 20, 1, 10000, true)
+                        .apply(List.of(new Document(documentTextDTO.getContent(), customMetadata)));
+
+        vectorStore.accept(vectorStoreDocuments);
+
+        DocumentEntity documentEntity = new DocumentEntity();
+        documentEntity.setName(documentTextDTO.getName());
+        documentEntity.setSize((long)documentTextDTO.getContent().length());
+        documentEntity.setType("text/plain");
+        documentEntity.setUploadedAt(System.currentTimeMillis());
+        documentEntity.setDocumentVectorStoreEntities(
+                vectorStoreDocuments.stream().map(vectorStoreDocument -> {
+                    DocumentVectorStoreEntity documentVectorStoreEntity = new DocumentVectorStoreEntity();
+                    documentVectorStoreEntity.setDocumentId(documentEntity.getId());
+                    documentVectorStoreEntity.setVectorStoreId(vectorStoreDocument.getId());
+                    return documentVectorStoreEntity;
+                }).collect(Collectors.toList()));
+        documentRepository.save(documentEntity);
+
+        DocumentDTO documentDTO = new DocumentDTO();
+        documentDTO.setName(documentTextDTO.getName());
+        documentDTO.setSize((long)documentTextDTO.getContent().length());
+        documentDTO.setType("text/plain");
+        documentDTO.setUploadedAt(System.currentTimeMillis());
+        documentDTO.setVectorStoreUUIDs(
+                vectorStoreDocuments.stream().map(Document::getId).collect(Collectors.toList()));
+
+        return documentDTO;
+
     }
 
     public List<DocumentDTO> getAll() {

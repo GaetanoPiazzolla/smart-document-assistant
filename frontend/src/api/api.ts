@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Sia Backend API
- * This is the backend for the Sia project.
+ * Smart Document Generation API
+ * This is the backend for the Smart Document Generation Application.
  *
  * The version of the OpenAPI document: 1.0
  * 
@@ -90,6 +90,25 @@ export interface DocumentDTO {
      * @memberof DocumentDTO
      */
     'vectorStoreUUIDs'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface DocumentTextDTO
+ */
+export interface DocumentTextDTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof DocumentTextDTO
+     */
+    'content'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DocumentTextDTO
+     */
+    'name'?: string;
 }
 /**
  * 
@@ -256,7 +275,7 @@ export const DocumentControllerApiAxiosParamCreator = function (configuration?: 
         uploadFile: async (name: string, uploadFileRequest?: UploadFileRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('uploadFile', 'name', name)
-            const localVarPath = `/api/v1/document`;
+            const localVarPath = `/api/v1/document/file`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -280,6 +299,41 @@ export const DocumentControllerApiAxiosParamCreator = function (configuration?: 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(uploadFileRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {DocumentTextDTO} documentTextDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadText: async (documentTextDTO: DocumentTextDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'documentTextDTO' is not null or undefined
+            assertParamExists('uploadText', 'documentTextDTO', documentTextDTO)
+            const localVarPath = `/api/v1/document/text`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(documentTextDTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -320,6 +374,18 @@ export const DocumentControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['DocumentControllerApi.uploadFile']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {DocumentTextDTO} documentTextDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async uploadText(documentTextDTO: DocumentTextDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DocumentDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadText(documentTextDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DocumentControllerApi.uploadText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -347,6 +413,15 @@ export const DocumentControllerApiFactory = function (configuration?: Configurat
          */
         uploadFile(name: string, uploadFileRequest?: UploadFileRequest, options?: any): AxiosPromise<DocumentDTO> {
             return localVarFp.uploadFile(name, uploadFileRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {DocumentTextDTO} documentTextDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadText(documentTextDTO: DocumentTextDTO, options?: any): AxiosPromise<DocumentDTO> {
+            return localVarFp.uploadText(documentTextDTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -378,6 +453,17 @@ export class DocumentControllerApi extends BaseAPI {
      */
     public uploadFile(name: string, uploadFileRequest?: UploadFileRequest, options?: RawAxiosRequestConfig) {
         return DocumentControllerApiFp(this.configuration).uploadFile(name, uploadFileRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {DocumentTextDTO} documentTextDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DocumentControllerApi
+     */
+    public uploadText(documentTextDTO: DocumentTextDTO, options?: RawAxiosRequestConfig) {
+        return DocumentControllerApiFp(this.configuration).uploadText(documentTextDTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

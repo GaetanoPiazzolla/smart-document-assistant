@@ -1,6 +1,7 @@
 package gae.piaz.sda.controller;
 
 import gae.piaz.sda.controller.dto.DocumentDTO;
+import gae.piaz.sda.controller.dto.DocumentTextDTO;
 import gae.piaz.sda.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,18 @@ public class DocumentController {
      * Receive a file and store it in the database.
      * TODO can be async
      */
-    @PostMapping
+    @PostMapping("/file")
     public ResponseEntity<DocumentDTO> uploadFile(
             @RequestParam("file") MultipartFile file, @RequestParam("name") String name) {
         return ResponseEntity.ok(documentService.uploadFile(file, name));
+    }
+
+    /**
+     * Receive a new document directly as text content.
+     */
+    @PostMapping("/text")
+    public ResponseEntity<DocumentDTO> uploadText(@RequestBody DocumentTextDTO documentTextDTO) {
+        return ResponseEntity.ok(documentService.uploadText(documentTextDTO));
     }
 
     @GetMapping("/all")

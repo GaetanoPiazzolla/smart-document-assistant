@@ -1,21 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Configuration, DocumentControllerApi, AssistantControllerApi } from './api';
 
 const useApi = (backendUrl: string) => {
-    const [documentApi, setDocumentApi] = useState<DocumentControllerApi | null>(null);
-    const [assistantApi, setAssistantApi] = useState<AssistantControllerApi | null>(null);
 
-    useEffect(() => {
-        const configuration = new Configuration({
-            basePath: backendUrl,
-        });
+    const [documentApi] = useState<DocumentControllerApi>(
+        new DocumentControllerApi(new Configuration({ basePath: backendUrl }))
+    );
 
-        const documentControllerApi = new DocumentControllerApi(configuration);
-        const assistantControllerApi = new AssistantControllerApi(configuration);
-
-        setDocumentApi(documentControllerApi);
-        setAssistantApi(assistantControllerApi);
-    }, [backendUrl]);
+    const [assistantApi] = useState<AssistantControllerApi>(
+        new AssistantControllerApi(new Configuration({ basePath: backendUrl }))
+    );
 
     return { documentApi, assistantApi };
 };

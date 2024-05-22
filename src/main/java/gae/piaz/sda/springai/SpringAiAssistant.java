@@ -113,4 +113,5 @@ public class SpringAiAssistant {
                                 "current_date", java.time.LocalDate.now(),
                                 "history", history));
     }
+
 }

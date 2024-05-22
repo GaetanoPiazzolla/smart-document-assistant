@@ -22,11 +22,9 @@ public class AssistantController {
     @PostMapping("chat")
     public ResponseEntity<ChatMessage> chat(@RequestBody ChatMessage chatMessage) {
         Flux<String> msg = springAiAssistant.chat(chatMessage.getChatId(), chatMessage.getMessage());
-        Mono<Object> mono = msg.collectList().map(list -> String.join(" ", list));
-        String result = mono.block().toString();
-
+        Mono<String> mono = msg.collectList().map(list -> String.join(" ", list));
         ChatMessage response = new ChatMessage();
-        response.setMessage(result);
+        response.setMessage( mono.block());
         response.setChatId(chatMessage.getChatId());
         response.setIsResponse(true);
         return ResponseEntity.ok(response);

@@ -14,9 +14,9 @@ public class OpenApiConfiguration {
         return new OpenAPI()
                 .info(
                         new Info()
-                                .title("Sia Backend API")
+                                .title("Smart Document Generation API")
                                 .version("1.0")
-                                .description("This is the backend for the Sia project."));
+                                .description("This is the backend for the Smart Document Generation Application."));
     }
 
     @Bean
