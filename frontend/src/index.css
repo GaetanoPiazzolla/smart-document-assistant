@@ -22,6 +22,16 @@ a:hover {
   color: #535bf2;
 }
 
+textarea:hover,
+textarea:focus,
+textarea:focus-visible,
+input:hover,
+input:focus,
+input:focus-visible {
+  outline: none;
+  border: 1px solid #646cff;
+}
+
 body {
   margin: 0;
   display: flex;
@@ -34,6 +44,8 @@ h1 {
   line-height: 1.1;
 }
 
+input,
+textarea,
 button {
   border-radius: 8px;
   border: 1px solid transparent;

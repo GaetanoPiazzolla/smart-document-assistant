@@ -1,13 +1,17 @@
 import {useState, useEffect} from 'react';
-import './chat.css';
-import useApi from './useApi';
-import {ChatMessage} from "./api";
+import './Chat.css';
+import useApi from '../hooks/useApi.ts';
+import {ChatMessage} from "../api";
 
 function Chat() {
     const {assistantApi} = useApi('http://localhost:8080');
 
     const [chatId, setChatId] = useState('');
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [messages, setMessages] = useState<ChatMessage[]>([{
+        chatId: "0",
+        message: "Hello! How can I help you today?",
+        isResponse: true
+    }]);
     const [input, setInput] = useState('');
 
     // Generate a unique chatId on component load
@@ -30,13 +34,13 @@ function Chat() {
                 isResponse: false
             };
 
-            setMessages((prevMessages) => [...prevMessages, message]);
+            setMessages((prevMessages) => [message, ...prevMessages ]);
+            setInput('');
 
             const response = await assistantApi?.chat(message);
             if(response)
-                setMessages((prevMessages) => [...prevMessages, response.data]);
+                setMessages((prevMessages) => [response.data, ...prevMessages]);
 
-            setInput('');
 
         } catch (error) {
             console.error(error);
@@ -45,8 +49,9 @@ function Chat() {
 
     return (
         <div className="chat-container">
-            <h2>Smart Document Assistant</h2>
-            <hr style={{width: '100%'}}/>
+            <div className="title">
+                <h2>Smart Document Assistant</h2>
+            </div>
             <div className="chat-messages">
                 {messages.map((message, index) => (
                     <p key={index}

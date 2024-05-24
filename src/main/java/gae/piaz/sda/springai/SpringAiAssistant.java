@@ -110,7 +110,6 @@ public class SpringAiAssistant {
                 .createMessage(
                         Map.of(
                                 "documents", documents,
-                                "current_date", java.time.LocalDate.now(),
                                 "history", history));
     }
 

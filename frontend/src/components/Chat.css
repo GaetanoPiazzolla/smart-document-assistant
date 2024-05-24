@@ -3,12 +3,12 @@
     flex-direction: column;
     justify-content: flex-end;
     height: 100vh;
-    width: 30%;
+    width: 60%;
     position: fixed;
     left: 0;
     padding: 1em;
     box-sizing: border-box;
-    border-right: 1px solid #4f3d3d;
+    border-right: 1px solid #646cff;
 }
 
 .chat-input {
@@ -16,15 +16,24 @@
 }
 
 .chat-messages {
+    display: flex;
+    flex-direction: column-reverse;
     overflow-y: auto;
-    flex-grow: 1;
 }
 
 .sent-message {
-    color: #78789b;
+    color: #ffffff;
     text-align: right;
 }
 
 .received-message {
-    color: #617361;
+    color: #646cff;
+}
+
+.title {
+    flex-grow: 1;
+    font-size: 20px;
+    color: #646cff;
+    text-shadow: 1px 1px 1px #CCCCCC
+
 }

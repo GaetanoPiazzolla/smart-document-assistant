@@ -1,12 +1,12 @@
 import './App.css'
-import Chat from "./chat.tsx";
-import DocumentUploader from "./documentUploader.tsx";
+import Chat from "./components/Chat.tsx";
+import DocumentManager from "./components/DocumentManager.tsx";
 function App() {
     return (
         <>
             <div className="app-container">
                 <Chat/>
-                <DocumentUploader/>
+                <DocumentManager/>
             </div>
         </>
     )
