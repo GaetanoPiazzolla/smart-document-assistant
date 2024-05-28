@@ -13,6 +13,7 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 
-/** * @author Christian Tzolov */
+/**
+ * @author Christian Tzolov @Author Gaetano Piazzolla
+ */
 @Service
 public class SpringAiAssistant {
 
@@ -30,6 +33,12 @@ public class SpringAiAssistant {
 
     @Value("classpath:/spring-ai/system-qa.st")
     private Resource systemPrompt;
+
+    @Value("${sda.pgvector.similarity_threshold}")
+    double similarityThreshold;
+
+    @Value("${sda.pgvector.k_nearest_neighbors}")
+    int kNearestNeighbors;
 
     private final StreamingChatClient chatClient;
 
@@ -47,10 +56,17 @@ public class SpringAiAssistant {
     public Flux<String> chat(String chatId, String userMessageContent) {
 
         // Retrieve related documents to query
-        List<Document> similarDocuments = this.vectorStore.similaritySearch(userMessageContent);
+        SearchRequest request =
+                SearchRequest.query(userMessageContent)
+                        .withSimilarityThreshold(similarityThreshold)
+                        .withTopK(kNearestNeighbors);
 
-        if(CollectionUtils.isEmpty(similarDocuments))
-            return null;
+        List<Document> similarDocuments = this.vectorStore.similaritySearch(request);
+
+        if (CollectionUtils.isEmpty(similarDocuments)) return Flux.create(sink -> {
+            sink.next("I am sorry, I could not find any related documents to your query. Please try again.");
+            sink.complete();
+        });
 
         Message systemMessage =
                 getSystemMessage(
@@ -66,7 +82,6 @@ public class SpringAiAssistant {
         // Ask the AI model
         Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
 
-        // FIXME: this could be a non-blocking call returning Flux to the client
         return this.chatClient.stream(prompt)
                 .map(
                         (ChatResponse chatResponse) -> {
@@ -102,7 +117,7 @@ public class SpringAiAssistant {
 
         String documents =
                 similarDocuments.stream()
-                        .map(entry -> entry.getContent())
+                        .map(Document::getContent)
                         .collect(Collectors.joining(System.lineSeparator()));
 
         // Needs to be created on each call as it is not thread safe.
@@ -112,5 +127,4 @@ public class SpringAiAssistant {
                                 "documents", documents,
                                 "history", history));
     }
-
 }

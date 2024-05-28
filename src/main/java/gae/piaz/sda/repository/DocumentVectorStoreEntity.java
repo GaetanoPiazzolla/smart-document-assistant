@@ -1,7 +1,6 @@
 package gae.piaz.sda.repository;
 
 import jakarta.persistence.*;
-
 import lombok.Data;
 
 @Entity
@@ -16,5 +15,4 @@ public class DocumentVectorStoreEntity {
     @Id
     @Column(name = "document_id")
     private Integer documentId;
-
 }

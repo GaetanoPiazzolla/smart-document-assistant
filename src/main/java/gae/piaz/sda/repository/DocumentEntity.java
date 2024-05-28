@@ -1,9 +1,7 @@
 package gae.piaz.sda.repository;
 
 import jakarta.persistence.*;
-
 import java.util.List;
-
 import lombok.Data;
 
 @Entity
@@ -27,7 +25,10 @@ public class DocumentEntity {
     @Column(name = "uploaded_at")
     private Long uploadedAt;
 
+    @Column(name = "content")
+    private byte[] content;
+
+    // TODO probably we can store directly the List of VectorStoreIds
     @OneToMany(mappedBy = "documentId", fetch = FetchType.LAZY)
     private List<DocumentVectorStoreEntity> documentVectorStoreEntities;
-
 }

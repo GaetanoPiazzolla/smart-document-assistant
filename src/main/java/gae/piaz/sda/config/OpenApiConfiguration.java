@@ -16,7 +16,8 @@ public class OpenApiConfiguration {
                         new Info()
                                 .title("Smart Document Generation API")
                                 .version("1.0")
-                                .description("This is the backend for the Smart Document Generation Application."));
+                                .description(
+                                        "This is the backend for the Smart Document Generation Application."));
     }
 
     @Bean

@@ -1,11 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
 import useApi from '../hooks/useApi.ts';
-import {UploadFileRequest} from "../api";
+import {DocumentDTO, UploadFileRequest} from "../api";
 import './DocumentManager.css';
 
+// @ts-ignore
 function DocumentManager() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [documents, setDocuments] = useState<any[]>([]);
+    const [documents, setDocuments] = useState<DocumentDTO[]>([]);
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const {documentApi} = useApi('http://localhost:8080');
@@ -37,12 +38,31 @@ function DocumentManager() {
     const handleSubmit = async () => {
         await documentApi.uploadText({name, content});
         setShowModal(false);
+        await fetchDocuments();
     }
 
     const fetchDocuments = async () => {
         const response = await documentApi.getAll();
         setDocuments(response.data);
     };
+
+
+    function downloadDocument(id: number) {
+        documentApi.download(id).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'document.txt');
+            document.body.appendChild(link);
+            link.click();
+        });
+    }
+
+
+    const deleteDocument = async (id: number)=> {
+        await documentApi._delete(id);
+        await fetchDocuments();
+    }
 
     const handleUpload = async () => {
         if (selectedFile) {
@@ -68,6 +88,7 @@ function DocumentManager() {
             handleUpload();
         }
     }, [selectedFile]);
+
 
     return (
         <div className="document-uploader-container">
@@ -97,8 +118,10 @@ function DocumentManager() {
             <table>
                 <thead>
                 <tr>
-                    <th>Document Name</th>
-                    <th>Document Size</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Download</th>
+                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -106,6 +129,12 @@ function DocumentManager() {
                     <tr key={index} style={{textAlign: 'center'}}>
                         <td>{doc.name}</td>
                         <td>{doc.size}</td>
+                        <td>
+                            <button className="button-document" onClick={() => downloadDocument(doc.id)}>Download</button>
+                        </td>
+                        <td>
+                            <button className="button-document" onClick={() => deleteDocument(doc.id)}>Delete</button>
+                        </td>
                     </tr>
                 ))}
                 </tbody>
