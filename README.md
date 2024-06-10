@@ -2,8 +2,8 @@
 
 A Retrieval Augmented Generation (RAG) Tool with document management using Spring Boot, ReactJS, and PGVector.
 
-- Introduction: https://gaetanopiazzolla.github.io/java/rag/2024/05/23/rag-spring-ai.html
-- Function Calling: https://gaetanopiazzolla.github.io/java/rag/2024/06/10/spring-ai-function-calling.html
+- Introduction: https://gaetanopiazzolla.github.io/java/rag/2024/05/29/rag-spring-ai.html
+- Function Calling: https://gaetanopiazzolla.github.io/java/rag/2024/06/10/llm-function-calling.html
 
 ## How to Run Locally
 Run the following command to start the backend application:
