@@ -31,7 +31,8 @@ function Chat() {
             const message: ChatMessage = {
                 chatId,
                 message: input,
-                isResponse: false
+                isResponse: false,
+                withFunctionCall: true
             };
 
             setMessages((prevMessages) => [message, ...prevMessages ]);

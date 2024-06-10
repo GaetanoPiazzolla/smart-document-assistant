@@ -56,6 +56,7 @@ public class DocumentController {
         return ResponseEntity.ok().build();
     }
 
+    /** Get all documents. */
     @GetMapping("/all")
     public ResponseEntity<List<DocumentDTO>> getAll() {
         return ResponseEntity.ok(documentService.getAll());

@@ -25,7 +25,10 @@ spring:
       api-key: ${OPENAI_API_KEY}
       chat:
         options:
+          # The model to use for the chat. possible values are: gpt-3-turbo, gpt-4-turbo, gpt-4-turbo-preview
           model: gpt-4-turbo-preview
+          # The temperature of the model. Must be a float between 0 and 1. Higher values mean the model will take more risks.
+          temperature: 0.1
 
   docker:
     compose:

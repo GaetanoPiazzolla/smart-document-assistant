@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
  *
  * @author Christian Tzolov
  * @author Marcus Hellberg (small fixes)
+ * @author Gaetano Piazzolla (update version)
  */
 @Service
 public class ChatHistory {
@@ -53,7 +54,7 @@ public class ChatHistory {
     }
 
     private String getProperty(Message message, String key) {
-        return message.getProperties().getOrDefault(key, "").toString();
+        return message.getMetadata().getOrDefault(key, "").toString();
     }
 
     private void finalizeMessageGroup(String chatId, String groupId) {
@@ -61,7 +62,7 @@ public class ChatHistory {
 
         if (sessionMessages != null) {
             if (sessionMessages.size() == 1) {
-                this.commitToHistoryLog(chatId, sessionMessages.get(0));
+                this.commitToHistoryLog(chatId, sessionMessages.getFirst());
             } else {
                 String aggregatedContent =
                         sessionMessages.stream()

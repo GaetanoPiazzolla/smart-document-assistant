@@ -6,7 +6,6 @@ import gae.piaz.sda.controller.dto.DocumentTextDTO;
 import gae.piaz.sda.repository.DocumentEntity;
 import gae.piaz.sda.repository.DocumentRepository;
 import gae.piaz.sda.repository.DocumentVectorStoreEntity;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +38,12 @@ public class DocumentService {
         boolean keepSeparator = true;
 
         List<Document> vectorStoreDocuments =
-                new TokenTextSplitter(defaultChunkSize, minChunkSizeChars, minChunkLenghtToEmbed, maxNumChunks, keepSeparator)
+                new TokenTextSplitter(
+                                defaultChunkSize,
+                                minChunkSizeChars,
+                                minChunkLenghtToEmbed,
+                                maxNumChunks,
+                                keepSeparator)
                         .apply(new TextReader(file.getResource()).get());
 
         vectorStore.accept(vectorStoreDocuments);
@@ -82,7 +86,12 @@ public class DocumentService {
         boolean keepSeparator = true;
 
         List<Document> vectorStoreDocuments =
-                new TokenTextSplitter(defaultChunkSize, minChunkSizeChars, minChunkLenghtToEmbed, maxNumChunks, keepSeparator)
+                new TokenTextSplitter(
+                                defaultChunkSize,
+                                minChunkSizeChars,
+                                minChunkLenghtToEmbed,
+                                maxNumChunks,
+                                keepSeparator)
                         .apply(List.of(new Document(documentTextDTO.getContent(), customMetadata)));
 
         vectorStore.accept(vectorStoreDocuments);
@@ -112,8 +121,6 @@ public class DocumentService {
         documentDTO.setSize((long) documentTextDTO.getContent().length());
         documentDTO.setType("text/plain");
         documentDTO.setUploadedAt(System.currentTimeMillis());
-        documentDTO.setVectorStoreUUIDs(
-                vectorStoreDocuments.stream().map(Document::getId).collect(Collectors.toList()));
 
         return documentDTO;
     }
@@ -126,7 +133,8 @@ public class DocumentService {
 
     public DocumentContentDTO getDocumentById(Integer id) {
         DocumentEntity documentEntity = documentRepository.findById(id).orElseThrow();
-        DocumentContentDTO documentDTO = (DocumentContentDTO) mapDocumentToDTO(documentEntity, true);
+        DocumentContentDTO documentDTO =
+                (DocumentContentDTO) mapDocumentToDTO(documentEntity, true);
         documentDTO.setContent(documentEntity.getContent());
         return documentDTO;
     }
@@ -155,16 +163,13 @@ public class DocumentService {
         documentDTO.setSize(documentEntity.getSize());
         documentDTO.setType(documentEntity.getType());
         documentDTO.setUploadedAt(documentEntity.getUploadedAt());
-        documentDTO.setVectorStoreUUIDs(
-                documentEntity.getDocumentVectorStoreEntities().stream()
-                        .map(DocumentVectorStoreEntity::getVectorStoreId)
-                        .collect(Collectors.toList()));
         return documentDTO;
     }
 
     public InputStream download(Integer id) {
-        return documentRepository.findById(id).map(documentEntity ->
-                new ByteArrayInputStream(documentEntity.getContent())).orElseThrow();
+        return documentRepository
+                .findById(id)
+                .map(documentEntity -> new ByteArrayInputStream(documentEntity.getContent()))
+                .orElseThrow();
     }
-
 }

@@ -47,6 +47,12 @@ export interface ChatMessage {
      * @memberof ChatMessage
      */
     'isResponse'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ChatMessage
+     */
+    'withFunctionCall'?: boolean;
 }
 /**
  * 
@@ -84,12 +90,6 @@ export interface DocumentContentDTO {
      * @memberof DocumentContentDTO
      */
     'uploadedAt'?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DocumentContentDTO
-     */
-    'vectorStoreUUIDs'?: Array<string>;
     /**
      * 
      * @type {Array<string>}
@@ -133,12 +133,6 @@ export interface DocumentDTO {
      * @memberof DocumentDTO
      */
     'uploadedAt'?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DocumentDTO
-     */
-    'vectorStoreUUIDs'?: Array<string>;
 }
 /**
  * 

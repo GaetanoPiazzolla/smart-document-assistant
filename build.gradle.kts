@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "gae.piaz"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.2-SNAPSHOT"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_21
@@ -22,18 +22,19 @@ repositories {
 	maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-extra["springAiVersion"] = "0.8.1"
+extra["springAiVersion"] = "1.0.0.M1"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+
 	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
 	implementation("org.springframework.ai:spring-ai-pgvector-store-spring-boot-starter")
+	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
 
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
